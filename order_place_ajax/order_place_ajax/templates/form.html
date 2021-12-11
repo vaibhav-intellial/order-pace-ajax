@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>form</title>
+</head>
+
+<body>
+    <h1>details</h1>
+    {{ msg }}{{ editsms }}{{ sms }}
+    <h3>firstname</h3><input type="text" name="firstname" id="firstname">
+    <h3>lastname</h3><input type="text" name="lastname" id="lastname">
+    <h3>email</h3><input type="text" name="email" id="email">
+    <h3>street</h3><input type="text" name="address_street" id="address_street">
+    <h3>landmark</h3><input type="text" name="address_landmark" id="address_landmark">
+    <h3>pincode</h3><input type="text" name="address_pincode" id="address_pincode">
+    <h3>product</h3><select name="product" id="product">
+        {% for product in allproduct %}
+        <option value="{{ product.id }}" id="{{ product.id }}">{{ product.name }}</option>
+        {% endfor %}
+    </select>
+
+    <h3>quantity</h3><input type="text" name="quantity" id="quantity">
+    <h3>prize</h3><input type="text" name="prize" id="prize">
+    <button value="submit" name="submit" id="save_order">save</button>
+
+
+    <br><br>
+    <table border="1" id="orderTabel">
+        {{ msg }}
+        <tr>
+            <th>name</th>
+            <th>address</th>
+            <th>product</th>
+            <th>quantiity</th>
+            <th>prize</th>
+            <th>action</th>
+        </tr>
+        {% for data in allorderitem %}
+        <tr>
+            <td>{{ data.order.firstname }} {{ data.order.lastname }}</td>
+            <td>{{ data.order.address_street }} {{ data.order.address_landmark }} {{ data.order.address_pincode }}</td>
+            <td>{{ data.product.name }}</td>
+            <td>{{ data.quantity }}</td>
+            <td>{{ data.prize }}</td>
+            <td>
+                <a href="">edit</a>
+                <a href="">delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <script type="text/javascript">
+
+        window.onload = initAll;
+        var saveOrderButton;
+        var allOrderView;
+
+        function initAll() {
+            saveOrderButton = document.getElementById('save_order');
+            saveOrderButton.onclick = saveOrder;
+
+            allOrderView = document.getElementById('orderTalbe');
+            allOrderView.onload = viewOrder;
+
+        }
+        function viewOrder(){
+            const req_data = new XMLHttpRequest();
+            req_data.onload = function () {
+                var url = '/vieworder';
+
+            }
+            req_data.open("GET", url, true);
+            req_data.send();
+        }
+
+        function saveOrder() {
+            var firstname = document.getElementById('firstname').value;
+            var lastname = document.getElementById('lastname').value;
+            var email = document.getElementById('email').value;
+            var address_street = document.getElementById('address_street').value;
+            var address_landmark = document.getElementById('address_landmark').value;
+            var address_pincode = document.getElementById('address_pincode').value;
+            var product = document.getElementById('product').value;
+            var quantity = document.getElementById('quantity').value;
+            var prize = document.getElementById('prize').value;
+
+            var url = '/addorder?firstname='+firstname+'&lastname='+lastname+'&email='+email+'&address_street='+address_street+'&address_landmark='+address_landmark+'&address_pincode='+address_pincode+'&product='+product+'&quantity='+quantity+'&prize='+prize ;
+
+
+            const req = new XMLHttpRequest();
+                req.onload = function () {
+                    alert(req.responseText);
+                    document.getElementById('firstname').value = '';
+                    document.getElementById('lastname').value='';
+                    document.getElementById('email').value='';
+                    document.getElementById('address_street').value='';
+                    document.getElementById('address_landmark').value='';
+                    document.getElementById('address_pincode').value='';
+                    document.getElementById('product').value='';
+                    document.getElementById('quantity').value='';
+                    document.getElementById('prize').value='';
+
+                }
+                req.open("GET", url , true);
+                req.send();
+        }
+
+
+
+    </script>
+</body>
+
+</html>
